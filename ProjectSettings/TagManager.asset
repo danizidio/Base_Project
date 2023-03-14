@@ -11,6 +11,7 @@ TagManager:
   - BloomFX
   - FilmGrainFX
   - ChromaFX
+  - UI_Element
   layers:
   - Default
   - TransparentFX

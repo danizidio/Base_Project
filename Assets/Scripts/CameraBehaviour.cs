@@ -10,7 +10,14 @@ public class CameraBehaviour : MonoBehaviour
     public delegate void _onSearchingPlayer();
     public static _onSearchingPlayer OnSearchingPlayer;
 
-    GameObject p;
+    public delegate void _onGetFocus(GameObject item);
+    public static _onGetFocus OnGetFocus;
+
+    [SerializeField] float _cameraSizeMinimum;
+    [SerializeField] float _cameraSizeMaximum;
+    [SerializeField] float _maxTimeOnFocus;
+
+    GameObject _p;
 
     void FindPlayer()
     {
@@ -19,13 +26,13 @@ public class CameraBehaviour : MonoBehaviour
 
     IEnumerator CorroutineFindPlayer()
     {
-        p = GameObject.FindGameObjectWithTag("Player");
+        _p = GameObject.FindGameObjectWithTag("Player");
 
         yield return new WaitForSeconds(.02f);
 
-        if (p != null)
+        if (_p != null)
         {
-            GetComponent<CinemachineVirtualCamera>().Follow = p.transform;
+            GetComponent<CinemachineVirtualCamera>().Follow = _p.transform;
 
             GameBehaviour.OnNextGameState?.Invoke(GamePlayStates.START);
 
@@ -37,12 +44,42 @@ public class CameraBehaviour : MonoBehaviour
         }
     }
 
+    void ObjectToFocus(GameObject item)
+    {
+        if (GetComponent<CinemachineVirtualCamera>().Follow != _p)
+        {
+            StopCoroutine("CorroutineObjectToFocus");
+
+            GetComponent<CinemachineVirtualCamera>().Follow = null;
+
+            StartCoroutine(CorroutineObjectToFocus(item));
+        }
+        else
+        {
+            StartCoroutine(CorroutineObjectToFocus(item));
+        }
+    }
+
+    IEnumerator CorroutineObjectToFocus(GameObject item)
+    {
+        GetComponent<CinemachineVirtualCamera>().Follow = item.transform;
+
+        GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = _cameraSizeMinimum;
+
+        yield return new WaitForSeconds(_maxTimeOnFocus);
+
+        GetComponent<CinemachineVirtualCamera>().Follow = _p.transform;
+
+        GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = _cameraSizeMaximum;
+    }
     private void OnEnable()
     {
         OnSearchingPlayer += FindPlayer;
+        OnGetFocus = ObjectToFocus;
     }
     private void OnDisable()
     {
         OnSearchingPlayer -= FindPlayer;
+        OnGetFocus = null;
     }
 }
