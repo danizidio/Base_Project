@@ -14,6 +14,25 @@ public class ButtonActions : MonoBehaviour
 
     [SerializeField] Toggle _fullScreen;
 
+    [SerializeField] GameObject _exitBtn;
+
+    [SerializeField] Color32 _fontColor;
+
+    private void Start()
+    {
+#if UNITY_WEBGL  
+        _exitBtn.SetActive(false);
+        _resolution.gameObject.SetActive(false);
+        _qualitySettings.gameObject.SetActive(false);
+#endif
+
+        GameObject[] _fonts = GameObject.FindGameObjectsWithTag("UI_Element");
+        foreach(GameObject _font in _fonts)
+        {
+            _font.GetComponent<TMPro.TMP_Text>().color = _fontColor;
+        }
+    }
+    
     public void OnEnterOptions()
     {
         GetComponent<Animator>().SetTrigger("OPTIONS");
