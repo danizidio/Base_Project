@@ -105,7 +105,7 @@ public class Cronometer : MonoBehaviour
 			{
 				//_txt.text = string.Format("{0:00}:{1:00}", 0, 0);
 
-				GameBehaviour.OnNextGameState.Invoke(GamePlayStates.GAMEOVER);
+				GameManager.OnNextGameState.Invoke(GamePlayStates.GAMEOVER);
 			}
 			else
 			{

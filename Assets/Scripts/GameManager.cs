@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using StateMachine;
 
-public class GameBehaviour : GamePlayBehaviour
+public class GameManager : GamePlayBehaviour
 {
 
     private void Start()

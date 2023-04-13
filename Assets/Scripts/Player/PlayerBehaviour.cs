@@ -150,7 +150,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (_currentLife <= 0)
         {
-            GameBehaviour.OnNextGameState(GamePlayStates.GAMEOVER);
+            GameManager.OnNextGameState(GamePlayStates.GAMEOVER);
         }
 
         if (transform.localScale.x == 1)

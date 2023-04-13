@@ -14,7 +14,7 @@ public class ShowCurrentState : MonoBehaviour
 
     void Start()
     {
-        GameBehaviour.OnNextGameState += ShowText;    
+        GameManager.OnNextGameState += ShowText;    
     }
 
     GamePlayStates ShowText(GamePlayStates state)

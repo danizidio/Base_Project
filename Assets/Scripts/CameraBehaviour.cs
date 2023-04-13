@@ -34,7 +34,7 @@ public class CameraBehaviour : MonoBehaviour
         {
             GetComponent<CinemachineVirtualCamera>().Follow = _p.transform;
 
-            GameBehaviour.OnNextGameState?.Invoke(GamePlayStates.START);
+            GameManager.OnNextGameState?.Invoke(GamePlayStates.START);
 
             StopCoroutine(CorroutineFindPlayer());
         }

@@ -281,7 +281,7 @@ public class NavigationData : MonoBehaviour
 
             AudioSource audio = GameObject.FindGameObjectWithTag("VolumeSFX").GetComponent<AudioSource>();
 
-            audio.volume = _sfx;
+            if (audio != null) audio.volume = _sfx;
         }
 
         return _sfx;
