@@ -1,12 +1,3 @@
-public enum GamePlayStates
-{
-    INITIALIZING,
-    START,
-    GAMEPLAY,
-    PAUSE,
-    GAMEOVER
-}
-
 namespace StateMachine
 {
     public class GamePlayBehaviour : UnityEngine.MonoBehaviour

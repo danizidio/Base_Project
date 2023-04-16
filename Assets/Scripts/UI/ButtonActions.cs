@@ -126,8 +126,17 @@ public class ButtonActions : MonoBehaviour
 
         NavigationData.OnSetChromAberration?.Invoke(v);
     }
+    public void SaveMasterSoundVolume(float v)
+    {
+        SaveLoad s = new SaveLoad();
 
-    public void SaveVolume(float v)
+        s.PlayerSaveFloat(SaveStrings.MASTERSOUND.ToString(), v);
+
+        NavigationData.instance.SetVolumeValue(v);
+
+        NavigationData.OnSetVolume?.Invoke();
+    }
+    public void SaveMusicVolume(float v)
     {
         SaveLoad s = new SaveLoad();
 

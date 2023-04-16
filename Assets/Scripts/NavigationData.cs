@@ -6,6 +6,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using SaveLoadPlayerPrefs;
+using UnityEngine.Audio;
 
 public class NavigationData : MonoBehaviour
 {
@@ -36,11 +37,14 @@ public class NavigationData : MonoBehaviour
 
     [SerializeField] int _targetFrameRate;
 
-    [SerializeField] float _volume;
+    float _volume;
     public float Volume { get { return _volume; } }
 
-    [SerializeField] float _sfx;
+    float _sfx;
     public float Sfx { get { return _sfx; } }
+
+    float _masterSound;
+    public float MasterSound { get { return _masterSound; } }
 
     [SerializeField] bool _bloom;
     public bool Bloom { get { return _bloom; } }
@@ -53,6 +57,8 @@ public class NavigationData : MonoBehaviour
 
     [SerializeField] bool _fullScreen;
     public bool FullScreen { get { return _fullScreen; } set { _fullScreen = value; } }
+
+    [SerializeField] AudioMixer _audioMix;
 
     private void Awake()
     {
@@ -241,48 +247,28 @@ public class NavigationData : MonoBehaviour
         return _sfx = f;
     }
 
+    public float SetMasterSoundValue(float f)
+    {
+        return _masterSound = f;
+    }
+
+    public float SetSoundMaster()
+    {
+        _audioMix.SetFloat("MasterVol", _masterSound);
+
+        return _masterSound;
+    }
+
     public float SetSoundVolume()
     {
-        try
-        {
-            GameObject[] audio = GameObject.FindGameObjectsWithTag("VolumeSound");
-
-            foreach (GameObject audioObj in audio)
-            {
-                audioObj.GetComponent<AudioSource>().volume = _volume;
-            }
-        }
-        catch
-        {
-            Instantiate(Resources.Load("SoundSource"));
-
-            AudioSource audio = GameObject.FindGameObjectWithTag("VolumeSound").GetComponent<AudioSource>();
-
-            if (audio != null) audio.volume = _volume;
-        }
+        _audioMix.SetFloat("MusicVol", _volume);
 
         return _volume;
     }
 
     public float SetSfxVolume()
     {
-        try
-        {
-            GameObject[] audio = GameObject.FindGameObjectsWithTag("VolumeSFX");
-
-            foreach (GameObject audioSfx in audio)
-            {
-                audioSfx.GetComponent<AudioSource>().volume = _sfx;
-            }
-        }
-        catch
-        {
-            Instantiate(Resources.Load("SFXSource"));
-
-            AudioSource audio = GameObject.FindGameObjectWithTag("VolumeSFX").GetComponent<AudioSource>();
-
-            if (audio != null) audio.volume = _sfx;
-        }
+        _audioMix.SetFloat("SfxVol", _sfx);
 
         return _sfx;
     }

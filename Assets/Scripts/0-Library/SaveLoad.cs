@@ -3,19 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace SaveLoadPlayerPrefs
 {
-    public enum SaveStrings
-    {
-        MONETARY_VALUE,
-        HIGHSCORE,
-        BLOOM,
-        FILMGRAIN,
-        CHROMATIC_ABERRATION,
-        VOLUME,
-        RESOLUTION,
-        FULLSCREEN,
-        SFX,
-        FIRSTUSE
-    }
     public class SaveLoad
     {
         public void SavingCoins(int coinsToSave)
