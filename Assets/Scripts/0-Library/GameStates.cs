@@ -5,6 +5,7 @@ namespace StateMachine
         INITIALIZING,
         START,
         GAMEPLAY,
+        SHOWINFO,
         PAUSE,
         GAMEOVER
     }
