@@ -84,7 +84,7 @@ public class ButtonActions : MonoBehaviour
                 }
         }
 
-        s.PlayerSaveInt(SaveStrings.RESOLUTION.ToString(), res);
+        s.PlayerSaveInt<SaveStrings>(SaveStrings.MENU_RESOLUTION, res);
     }
 
     public void SetFullScreen(bool on)

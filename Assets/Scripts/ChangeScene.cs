@@ -51,7 +51,7 @@ public class ChangeScene : Timer
         while (!loading.isDone)
         {           
             //ANIMACAO PARA LOADING
-
+            //POSSIVEL USAR ASYNCOPERATION PROGRESS 
             yield return null;
         }
     }
