@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Language", menuName = "ScriptableObjects/LanguageDictionary")]
 public class SO_Languages : ScriptableObject
 {
+    public List<string> keys;
     public List<Lang> languages;
 }
 
@@ -14,7 +14,6 @@ public class SO_Languages : ScriptableObject
 public class Lang
 {
     public string language;
-    public List<string>langKey;
     public List<string> langValue;
 }
 

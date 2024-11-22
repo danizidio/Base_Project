@@ -12,18 +12,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cfdf459518846d4b8edcc84ebabffb4, type: 3}
   m_Name: Language
   m_EditorClassIdentifier: 
+  keys:
+  - artist
+  - begin
+  - clearsave
+  - confirm
+  - credits
+  - fullscreen
+  - game
+  - gamever
+  - imageset
+  - language
+  - leave
+  - negate
+  - option
+  - return
+  - settings
+  - soundset
+  - imagefeature
+  - master
+  - music
+  - sfx
+  - resolutionset
+  - bloom
+  - filmgrain
+  - chroma
   languages:
   - language: en
-    langKey:
-    - greet
-    - meet
     langValue:
-    - hi
-    - see
+    - artist
+    - start
+    - clear save data
+    - yes
+    - credits
+    - fullscreen
+    - game
+    - game version
+    - image quality
+    - language
+    - exit
+    - no
+    - options
+    - back
+    - settings
+    - sound settings
+    - visual effects
+    - master
+    - music
+    - sound effects
+    - resolution
+    - bloom
+    - filmgrain
+    - chroma
   - language: pt
-    langKey:
-    - greet
-    - meet
     langValue:
-    - ola
-    - veja
+    - artista
+    - iniciar
+    - apagar dados salvos
+    - sim
+    - "cr\xE9ditos"
+    - tela cheia
+    - jogo
+    - "vers\xE3o do jogo"
+    - qualidade da imagem
+    - idioma
+    - sair
+    - "n\xE3o"
+    - "op\xE7\xF5es"
+    - voltar
+    - "configura\xE7\xF5es"
+    - "configura\xE7\xF5es de som"
+    - efeitos visuais
+    - geral
+    - musica
+    - efeitos sonoros
+    - "resolu\xE7\xE3o"
+    - bloom
+    - "gr\xE3o de filme"
+    - "aberra\xE7\xE3o crom\xE1tica"

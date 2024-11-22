@@ -2,7 +2,6 @@
  "artist": "artista",
  "begin": "iniciar",
  "clearsave": "apagar dados salvos",
- "closegame": "sair",
  "confirm": "sim",
  "credits": "créditos",
  "fullscreen": "tela cheia",
@@ -15,5 +14,13 @@
  "option": "opções",
  "return": "voltar",
  "settings": "configurações",
- "soundset": "configurações de som"
+ "soundset": "configurações de som",
+ "imagefeature": "efeitos visuais",
+ "master": "geral",
+ "music": "musica",
+ "sfx": "efeitos sonoros",
+ "resolutionset": "resolução",
+ "bloom": "bloom",
+ "filmgrain": "grão de filme",
+ "chroma": "aberração cromática"
 }

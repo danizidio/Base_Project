@@ -14,7 +14,7 @@ public class GerarArquivoWindow : EditorWindow
     [MenuItem("Languages/Generate Dictionary")]
     public static void ShowWindow()
     {
-        EditorWindow.GetWindow(typeof(GerarArquivoWindow), false, "Gerar Arquivo");
+        EditorWindow.GetWindow(typeof(GerarArquivoWindow), false, "Gerar Arquivo(s)");
     }
 
     private void OnGUI()
@@ -33,20 +33,12 @@ public class GerarArquivoWindow : EditorWindow
                 if (s.language == "pt")
                 {
                     List<Lang> langList = so.languages.FindAll(lang => lang.language == "pt");
-                    WriteJson(langList, so, "pt");
-                    //SO_Languages filteredSO = CreateInstance<SO_Languages>();
-                    //filteredSO.languages = langList;
-                    //_jsonName[0] = "Language" + "_" + s.language + ".json";
-                    //_jsonContent[0] = JsonUtility.ToJson(filteredSO, true);
+                    WriteJson(so.keys, langList, so, "pt");
                 }
                 else
                 {
                     List<Lang> langList = so.languages.FindAll(lang => lang.language == "en");
-                    WriteJson(langList, so, "en");
-                    //SO_Languages filteredSO = CreateInstance<SO_Languages>();
-                    //filteredSO.languages = langList;
-                    //_jsonName[1] = "Language" + "_" + s.language + ".json";
-                    //_jsonContent[1] = JsonUtility.ToJson(filteredSO, true);
+                    WriteJson(so.keys, langList, so, "en");
                 }
             }
         }
@@ -57,29 +49,29 @@ public class GerarArquivoWindow : EditorWindow
 
         GUILayout.Label("Configurações do Arquivo", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Gerar Arquivo"))
+        if (GUILayout.Button("Gerar Arquivo(s)"))
         {
             GerarArquivo();
         }
     }
 
-    void WriteJson(List<Lang> list, SO_Languages so, string language)
+    void WriteJson(List<string> listKeys, List<Lang> listValues, SO_Languages so, string language)
     {
-        list = so.languages.FindAll(lang => lang.language == language);
-
-        if (list.Count > 0)
+        listValues = so.languages.FindAll(lang => lang.language == language);
+        
+        if (listKeys.Count > 0)
         {
             StringBuilder jsonBuilder = new StringBuilder();
             jsonBuilder.Append("{\n");
-            //jsonBuilder.AppendFormat(" \"language\": \"{0}\",\n", language);
-            //jsonBuilder.Append(" \"translations\": {\n");
-            for (int i = 0; i < list.Count; i++)
+
+            for (int i = 0; i < listValues.Count; i++)
             {
-                Lang lang = list[i];
-                for (int j = 0; j < lang.langKey.Count; j++)
+                Lang lang = listValues[i];
+
+                for (int j = 0; j < listKeys.Count; j++)
                 {
-                    jsonBuilder.AppendFormat(" \"{0}\": \"{1}\"", lang.langKey[j], lang.langValue[j]);
-                    if (i < list.Count - 1 || j < lang.langKey.Count - 1)
+                    jsonBuilder.AppendFormat(" \"{0}\": \"{1}\"", listKeys[j], lang.langValue[j]);
+                    if (i < listValues.Count - 1 || j < listKeys.Count - 1)
                     {
                         jsonBuilder.Append(",\n");
                     }
@@ -90,8 +82,13 @@ public class GerarArquivoWindow : EditorWindow
 
             EditorGUILayout.TextArea(jsonBuilder.ToString(), GUILayout.Height(100));
 
-            string caminho = Path.Combine(Application.dataPath + "/Localization", $"Language_{language}.json");
-            File.WriteAllText(caminho, jsonBuilder.ToString());
+            //string caminho = Path.Combine(Application.dataPath + "Resources/Localization", $"Language_{language}.json");
+            string path = Application.dataPath + "/Resources/Localization";
+
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+            string p = Path.Combine(path, $"Language_{language}.json");
+            File.WriteAllText(p, jsonBuilder.ToString());
         }
         else
         {

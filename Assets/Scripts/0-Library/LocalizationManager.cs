@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
 using SaveLoadPlayerPrefs;
+using System.IO;
+
 namespace Localization
 {
     public class LocalizationManager : MonoBehaviour
@@ -20,7 +22,29 @@ namespace Localization
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                
+
+                if (_files.Length == 0)
+                {
+                    string[] languageFiles = Directory.GetFiles(Application.dataPath + "/Resources/Localization", $"Language*.json", SearchOption.TopDirectoryOnly);
+
+                    _files = new TextAsset[languageFiles.Length];
+
+                    for (int i = 0; i < languageFiles.Length; i++)
+                    {
+                        string file = Path.GetFileNameWithoutExtension(languageFiles[i]);
+                        string relativePath = $"Localization/{file}";
+                        TextAsset t = Resources.Load<TextAsset>(relativePath);
+                        if (t != null)
+                        {
+                            _files[i] = t;
+                        }
+                        else
+                        {
+                            Debug.Log("Arquivo não encontrado no caminho: " + relativePath);
+                        }
+                    }
+                }
+
                 SaveLoad s = new SaveLoad();
 
                 if (s.CheckKey(SaveStrings.LOCALIZATION))

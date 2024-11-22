@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using Localization;
 using System;
+using System.Collections;
 public class LocalizationText : MonoBehaviour
 {
     public static Action OnUpdateLocalization;
@@ -14,6 +15,11 @@ public class LocalizationText : MonoBehaviour
         {
            textComponent.text = LocalizationManager.Instance.GetLocalizedValue(key);
         }
+    }
+
+    protected virtual string GetLocalizedText(string s)
+    {
+        return LocalizationManager.Instance.GetLocalizedValue(s);
     }
 
     private void OnEnable()

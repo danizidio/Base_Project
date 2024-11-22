@@ -7,7 +7,7 @@ using UnityEngine.Audio;
 
 public class NavigationData : MonoBehaviour
 {
-    public static NavigationData instance;
+    public static NavigationData Instance;
 
     public delegate bool _onSetBloom(bool b);
     public static _onSetBloom OnSetBloom;
@@ -57,9 +57,11 @@ public class NavigationData : MonoBehaviour
 
     [SerializeField] AudioMixer _audioMix;
 
+    SaveLoad _saveLoad = new SaveLoad();
+
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
     private void Start()
     {
@@ -78,76 +80,37 @@ public class NavigationData : MonoBehaviour
 
     void LoadData()
     {
-        SaveLoad _saveLoad = new SaveLoad();
-
         //FIRST TIME LOADING SETTING INITIAL VALUES!!
         if (!PlayerPrefs.HasKey(SaveStrings.FIRSTUSE.ToString()))
         {
-            _saveLoad.PlayerSaveFloat(SaveStrings.VOLUME.ToString(), 1);
-            _saveLoad.PlayerSaveFloat(SaveStrings.SFX.ToString(), 1);
-            _saveLoad.PlayerSaveBool(SaveStrings.BLOOM.ToString(), _bloom);
-            _saveLoad.PlayerSaveBool(SaveStrings.FILMGRAIN.ToString(), _filmGrain);
-            _saveLoad.PlayerSaveBool(SaveStrings.CHROMATIC_ABERRATION.ToString(), _chromaticAberration);
-            _saveLoad.PlayerSaveBool(SaveStrings.FULLSCREEN.ToString(), _fullScreen);
-            _saveLoad.PlayerSaveInt(SaveStrings.RESOLUTION.ToString(), 0);
+            _saveLoad.PlayerSaveFloat(SaveStrings.MENU_VOLUME, 1);
+            _saveLoad.PlayerSaveFloat(SaveStrings.MENU_SFX, 1);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_BLOOM, _bloom);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_FILMGRAIN, _filmGrain);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_CHROMATIC_ABERRATION, _chromaticAberration);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_FULLSCREEN, _fullScreen);
+            _saveLoad.PlayerSaveInt(SaveStrings.MENU_RESOLUTION, 0);
 
-            PlayerPrefs.SetInt(SaveStrings.FIRSTUSE.ToString(), 1);
+            _saveLoad.PlayerSaveInt(SaveStrings.FIRSTUSE, 1);
         }
 
         //IF HAS FIRST USE KEY THE VALUES CAME FROM PLAYERPREFS KEYS
         else
         {
-            _volume = PlayerPrefs.GetFloat(SaveStrings.VOLUME.ToString());
+            _volume = _saveLoad.PlayerLoadingFloat(SaveStrings.MENU_VOLUME);
 
-            _sfx = PlayerPrefs.GetFloat(SaveStrings.SFX.ToString());
+            _sfx = _saveLoad.PlayerLoadingFloat(SaveStrings.MENU_SFX.ToString());
 
+            _bloom = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_BLOOM);
 
-            //BLOOM
-            if (PlayerPrefs.GetString(SaveStrings.BLOOM.ToString()) == "True")
-            {
-                _bloom = true;
-            }
-            else
-            {
-                _bloom = false;
-            }
+            _filmGrain = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_FILMGRAIN);
 
+            _chromaticAberration = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_CHROMATIC_ABERRATION);
 
-            //FILMGRAIN
-            if (PlayerPrefs.GetString(SaveStrings.FILMGRAIN.ToString()) == "True")
-            {
-                _filmGrain = true;
-            }
-            else
-            {
-                _filmGrain = false;
-            }
-
-
-            //CHROMATIC ABERRATION
-            if (PlayerPrefs.GetString(SaveStrings.CHROMATIC_ABERRATION.ToString()) == "True")
-            {
-                _chromaticAberration = true;
-            }
-            else
-            {
-                _chromaticAberration = false;
-            }
-
-
-            //FULLSCREEN
-            if (PlayerPrefs.GetString(SaveStrings.FULLSCREEN.ToString()) == "True")
-            {
-                _fullScreen = true;
-            }
-            else
-            {
-                _fullScreen = false;
-            }
-
+            _fullScreen = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_FULLSCREEN);
 
             //RESOLUTION
-            switch (PlayerPrefs.GetInt(SaveStrings.RESOLUTION.ToString()))
+            switch (_saveLoad.PlayerLoadingInt(SaveStrings.MENU_RESOLUTION))
             {
                 case 0:
                     {
@@ -172,7 +135,6 @@ public class NavigationData : MonoBehaviour
             }
         }
     }
-
     
     public bool SetBloom(bool b)
     {

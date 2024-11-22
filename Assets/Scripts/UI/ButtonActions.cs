@@ -1,20 +1,25 @@
 using UnityEngine;
 using SaveLoadPlayerPrefs;
 using UnityEngine.UI;
-
+using UnityEngine.Rendering.Universal;
+using Localization;
+using TMPro;
 public class ButtonActions : MonoBehaviour
 {
     [SerializeField] Slider _sound, _sfx;
 
-    [SerializeField] TMPro.TMP_Dropdown _resolution;
+    [SerializeField] TMP_Dropdown _resolution;
 
-    [SerializeField] TMPro.TMP_Dropdown _qualitySettings;
+    [SerializeField] TMP_Dropdown _qualitySettings;
+    [SerializeField] TMP_Dropdown _languageSettings;
 
     [SerializeField] Toggle _fullScreen;
 
     [SerializeField] GameObject _exitBtn;
 
     [SerializeField] Color32 _fontColor;
+
+    SaveLoad s = new SaveLoad();
 
     private void Start()
     {
@@ -29,8 +34,20 @@ public class ButtonActions : MonoBehaviour
         {
             _font.GetComponent<TMPro.TMP_Text>().color = _fontColor;
         }
+
+        if (s.PlayerLoadingString<SaveStrings>(SaveStrings.LOCALIZATION) == "en")
+        {
+            _languageSettings.value = 0;
+            LocalizationManager.OnChangeLocalization("en");
+        }
+        if (s.PlayerLoadingString<SaveStrings>(SaveStrings.LOCALIZATION) == "pt")
+        {
+            _languageSettings.value = 1;
+            LocalizationManager.OnChangeLocalization("pt");
+        }
     }
-    
+
+    #region -- Button Animations
     public void OnEnterOptions()
     {
         GetComponent<Animator>().SetTrigger("OPTIONS");
@@ -50,7 +67,9 @@ public class ButtonActions : MonoBehaviour
     {
         GetComponent<Animator>().SetTrigger("CLEARSAVE");
     }
+    #endregion
 
+    #region -- Button Actions
     public void SetQuality(int qualitySettings)
     {
         QualitySettings.SetQualityLevel(qualitySettings);
@@ -58,28 +77,26 @@ public class ButtonActions : MonoBehaviour
 
     public void SetResolution(int res)
     {
-        SaveLoad s = new SaveLoad();
-
         switch (res)
         {
             case 0:
                 {
-                    Screen.SetResolution(1280, 720, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(1280, 720, NavigationData.Instance.FullScreen);
                     break;
                 }
             case 1:
                 {
-                    Screen.SetResolution(1920, 1080, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(1920, 1080, NavigationData.Instance.FullScreen);
                     break;
                 }
             case 2:
                 {
-                    Screen.SetResolution(2560, 1440, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(2560, 1440, NavigationData.Instance.FullScreen);
                     break;
                 }
             case 3:
                 {
-                    Screen.SetResolution(3840, 2160, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(3840, 2160, NavigationData.Instance.FullScreen);
                     break;
                 }
         }
@@ -89,68 +106,54 @@ public class ButtonActions : MonoBehaviour
 
     public void SetFullScreen(bool on)
     {
-        SaveLoad s = new SaveLoad();
-
         Screen.fullScreen = on;
 
-        NavigationData.instance.FullScreen = on;
+        NavigationData.Instance.FullScreen = on;
 
-        s.PlayerSaveBool(SaveStrings.FULLSCREEN.ToString(), on);
+        s.PlayerSaveBool<SaveStrings>(SaveStrings.MENU_FULLSCREEN , on);
     }
 
     public void SaveBloom(bool v)
     {
-        SaveLoad s = new SaveLoad();
-
-        s.PlayerSaveBool(SaveStrings.BLOOM.ToString(), v);
+        s.PlayerSaveBool<SaveStrings>(SaveStrings.MENU_BLOOM, v);
 
         NavigationData.OnSetBloom?.Invoke(v);
     }
 
     public void SaveFilmGrain(bool v)
     {
-        SaveLoad s = new SaveLoad();
-
-        s.PlayerSaveBool(SaveStrings.FILMGRAIN.ToString(), v);
+        s.PlayerSaveBool<SaveStrings>(SaveStrings.MENU_FILMGRAIN, v);
 
         NavigationData.OnSetFilmGrain?.Invoke(v);
     }
 
     public void SaveChromaticAberration(bool v)
     {
-        SaveLoad s = new SaveLoad();
-
-        s.PlayerSaveBool(SaveStrings.CHROMATIC_ABERRATION.ToString(), v);
+        s.PlayerSaveBool<SaveStrings>(SaveStrings.MENU_CHROMATIC_ABERRATION, v);
 
         NavigationData.OnSetChromAberration?.Invoke(v);
     }
     public void SaveMasterSoundVolume(float v)
     {
-        SaveLoad s = new SaveLoad();
+        s.PlayerSaveFloat<SaveStrings>(SaveStrings.MENU_MASTERSOUND, v);
 
-        s.PlayerSaveFloat(SaveStrings.MASTERSOUND.ToString(), v);
-
-        NavigationData.instance.SetVolumeValue(v);
+        NavigationData.Instance.SetVolumeValue(v);
 
         NavigationData.OnSetVolume?.Invoke();
     }
     public void SaveMusicVolume(float v)
     {
-        SaveLoad s = new SaveLoad();
+        s.PlayerSaveFloat<SaveStrings>(SaveStrings.MENU_VOLUME, v);
 
-        s.PlayerSaveFloat(SaveStrings.VOLUME.ToString(), v);
-
-        NavigationData.instance.SetVolumeValue(v);
+        NavigationData.Instance.SetVolumeValue(v);
 
         NavigationData.OnSetVolume?.Invoke();
     }
     public void SaveSFX(float v)
     {
-        SaveLoad s = new SaveLoad();
+        s.PlayerSaveFloat<SaveStrings>(SaveStrings.MENU_SFX, v);
 
-        s.PlayerSaveFloat(SaveStrings.SFX.ToString(), v);
-
-        NavigationData.instance.SetSfxValue(v);
+        NavigationData.Instance.SetSfxValue(v);
 
         NavigationData.OnSetSFX?.Invoke();
     }
@@ -160,55 +163,46 @@ public class ButtonActions : MonoBehaviour
         PlayerPrefs.DeleteAll();
     }
 
+    public void ChangeLocalization(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                {
+                    LocalizationManager.OnChangeLocalization("en");
+                    break;
+                }
+            case 1:
+                {
+                    LocalizationManager.OnChangeLocalization("pt");
+                    break;
+                }
+        }
+        LocalizationManager.Instance.SaveLocalizedText();
+    }
+    #endregion
+
     void UpdateUIOnLoad()
     {
-        _sound.value = PlayerPrefs.GetFloat(SaveStrings.VOLUME.ToString());
+        _sound.value = s.PlayerLoadingFloat<SaveStrings>(SaveStrings.MENU_VOLUME);
 
-        _sfx.value = PlayerPrefs.GetFloat(SaveStrings.SFX.ToString());
+        _sfx.value = s.PlayerLoadingFloat(SaveStrings.MENU_SFX);
 
         Toggle tChroma = GameObject.FindGameObjectWithTag("ChromaFX").GetComponent<Toggle>();
 
-        if (PlayerPrefs.GetString(SaveStrings.CHROMATIC_ABERRATION.ToString()) == "True")
-        {
-            tChroma.isOn = true;
-        }
-        else
-        {
-            tChroma.isOn = false;
-        }
+        tChroma.isOn = s.PlayerLoadingBool(SaveStrings.MENU_CHROMATIC_ABERRATION);
 
         Toggle tBlomm = GameObject.FindGameObjectWithTag("BloomFX").GetComponent<Toggle>();
 
-        if (PlayerPrefs.GetString(SaveStrings.BLOOM.ToString()) == "True")
-        {
-            tBlomm.isOn = true;
-        }
-        else
-        {
-            tBlomm.isOn = false;
-        }
+        tBlomm.isOn = s.PlayerLoadingBool(SaveStrings.MENU_BLOOM);
 
         Toggle tGrain = GameObject.FindGameObjectWithTag("FilmGrainFX").GetComponent<Toggle>();
 
-        if (PlayerPrefs.GetString(SaveStrings.FILMGRAIN.ToString()) == "True")
-        {
-            tGrain.isOn = true;
-        }
-        else
-        {
-            tGrain.isOn = false;
-        }
+        tGrain.isOn = s.PlayerLoadingBool(SaveStrings.MENU_FILMGRAIN);
 
-        if (PlayerPrefs.GetString(SaveStrings.FULLSCREEN.ToString()) == "True")
-        {
-            _fullScreen.isOn = true;
-        }
-        else
-        {
-            _fullScreen.isOn = false;
-        }
+        _fullScreen.isOn = s.PlayerLoadingBool(SaveStrings.MENU_FULLSCREEN);
 
-        _resolution.value = PlayerPrefs.GetInt(SaveStrings.RESOLUTION.ToString());
+        _resolution.value = s.PlayerLoadingInt(SaveStrings.MENU_RESOLUTION);
 
         switch (_resolution.value)
         {

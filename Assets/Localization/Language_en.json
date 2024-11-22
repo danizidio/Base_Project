@@ -1,4 +1,19 @@
 {
- "greet": "hi",
- "meet": "see"
+ "artist": "artist",
+ "begin": "start",
+ "clearsave": "clear save data",
+ "closegame": "exit",
+ "confirm": "yes",
+ "credits": "credits",
+ "fullscreen": "full screen",
+ "game": "game",
+ "gamever": "game version",
+ "imageset": "quality settings",
+ "language": "language",
+ "leave": "exit",
+ "negate": "no",
+ "option": "options",
+ "return": "return",
+ "settings": "settings",
+ "soundset": "sound settings"
 }
