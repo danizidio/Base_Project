@@ -3,9 +3,16 @@ using StateMachine;
 
 public class GameManager : GamePlayBehaviour
 {
+    public static System.Action<Vector2> OnSpawnPlayer;
+
+    [SerializeField] GameObject _player;
+
+    GameObject _currentPlayer;
 
     private void Start()
     {
+        OnSpawnPlayer = SpawnPlayer;
+
         OnNextGameState(GamePlayStates.INITIALIZING);
     }
 
@@ -41,6 +48,27 @@ public class GameManager : GamePlayBehaviour
 
                     break;
                 }
+            case GamePlayStates.HISTORY:
+                {
+                    Time.timeScale = 0;
+
+
+                    break;
+                }
+            case GamePlayStates.MECHANIC_APRESENTATION:
+                {
+                    Time.timeScale = 0;
+
+
+                    break;
+                }
+            case GamePlayStates.SHOWINFO:
+                {
+                    Time.timeScale = 0;
+
+
+                    break;
+                }
             case GamePlayStates.PAUSE:
                 {
                     Time.timeScale = 0;
@@ -71,5 +99,20 @@ public class GameManager : GamePlayBehaviour
                 OnNextGameState?.Invoke(GamePlayStates.GAMEPLAY);
             }
         }
+    }
+
+    void SpawnPlayer(Vector2 pos)
+    {
+        Instantiate(_player, pos, Quaternion.identity);
+
+        GameObject[] temp = GameObject.FindGameObjectsWithTag("Player");
+
+        if (temp.Length > 0)
+            for (int i = 1; i < temp.Length; i++)
+            {
+                Destroy(temp[i]);
+            }
+
+        temp[0].transform.position = pos;
     }
 }

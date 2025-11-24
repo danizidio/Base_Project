@@ -18,6 +18,9 @@ public class NavigationData : MonoBehaviour
     public delegate bool _onSetChromAberration(bool b);
     public static _onSetChromAberration OnSetChromAberration;
 
+    public delegate float _onSetMasterVolume();
+    public static _onSetVolume OnSetMasterVolume;
+
     public delegate float _onSetVolume();
     public static _onSetVolume OnSetVolume;
 
@@ -83,13 +86,14 @@ public class NavigationData : MonoBehaviour
         //FIRST TIME LOADING SETTING INITIAL VALUES!!
         if (!PlayerPrefs.HasKey(SaveStrings.FIRSTUSE.ToString()))
         {
-            _saveLoad.PlayerSaveFloat(SaveStrings.VOLUME.ToString(), 1);
-            _saveLoad.PlayerSaveFloat(SaveStrings.SFX.ToString(), 1);
-            _saveLoad.PlayerSaveBool(SaveStrings.BLOOM.ToString(), _bloom);
-            _saveLoad.PlayerSaveBool(SaveStrings.FILMGRAIN.ToString(), _filmGrain);
-            _saveLoad.PlayerSaveBool(SaveStrings.CHROMATIC_ABERRATION.ToString(), _chromaticAberration);
-            _saveLoad.PlayerSaveBool(SaveStrings.FULLSCREEN.ToString(), _fullScreen);
-            _saveLoad.PlayerSaveInt(SaveStrings.RESOLUTION.ToString(), 0);
+            _saveLoad.PlayerSaveFloat(SaveStrings.MENU_MASTERSOUND, 1);
+            _saveLoad.PlayerSaveFloat(SaveStrings.MENU_VOLUME, 1);
+            _saveLoad.PlayerSaveFloat(SaveStrings.MENU_SFX, 1);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_BLOOM, _bloom);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_FILMGRAIN, _filmGrain);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_CHROMATIC_ABERRATION, _chromaticAberration);
+            _saveLoad.PlayerSaveBool(SaveStrings.MENU_FULLSCREEN, _fullScreen);
+            _saveLoad.PlayerSaveInt(SaveStrings.MENU_RESOLUTION, 0);
 
             PlayerPrefs.SetInt(SaveStrings.FIRSTUSE.ToString(), 1);
         }
@@ -97,57 +101,15 @@ public class NavigationData : MonoBehaviour
         //IF HAS FIRST USE KEY THE VALUES CAME FROM PLAYERPREFS KEYS
         else
         {
-            _volume = PlayerPrefs.GetFloat(SaveStrings.VOLUME.ToString());
+            _masterSound = _saveLoad.PlayerLoadingFloat(SaveStrings.MENU_MASTERSOUND);
+            _volume = _saveLoad.PlayerLoadingFloat(SaveStrings.MENU_VOLUME);
+            _sfx = _saveLoad.PlayerLoadingFloat(SaveStrings.MENU_SFX);
+            _bloom = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_BLOOM);
+            _filmGrain = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_FILMGRAIN);
+            _chromaticAberration = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_CHROMATIC_ABERRATION);
+            _fullScreen = _saveLoad.PlayerLoadingBool(SaveStrings.MENU_FULLSCREEN);
 
-            _sfx = PlayerPrefs.GetFloat(SaveStrings.SFX.ToString());
-
-
-            //BLOOM
-            if (PlayerPrefs.GetString(SaveStrings.BLOOM.ToString()) == "True")
-            {
-                _bloom = true;
-            }
-            else
-            {
-                _bloom = false;
-            }
-
-
-            //FILMGRAIN
-            if (PlayerPrefs.GetString(SaveStrings.FILMGRAIN.ToString()) == "True")
-            {
-                _filmGrain = true;
-            }
-            else
-            {
-                _filmGrain = false;
-            }
-
-
-            //CHROMATIC ABERRATION
-            if (PlayerPrefs.GetString(SaveStrings.CHROMATIC_ABERRATION.ToString()) == "True")
-            {
-                _chromaticAberration = true;
-            }
-            else
-            {
-                _chromaticAberration = false;
-            }
-
-
-            //FULLSCREEN
-            if (PlayerPrefs.GetString(SaveStrings.FULLSCREEN.ToString()) == "True")
-            {
-                _fullScreen = true;
-            }
-            else
-            {
-                _fullScreen = false;
-            }
-
-
-            //RESOLUTION
-            switch (PlayerPrefs.GetInt(SaveStrings.RESOLUTION.ToString()))
+            switch (_saveLoad.PlayerLoadingInt(SaveStrings.MENU_RESOLUTION))
             {
                 case 0:
                     {
@@ -171,6 +133,10 @@ public class NavigationData : MonoBehaviour
                     }
             }
         }
+
+        SetSoundMaster();
+        SetSoundVolume();
+        SetSfxVolume();
     }
 
     
@@ -235,37 +201,40 @@ public class NavigationData : MonoBehaviour
         return _chromaticAberration = b;
     }
 
-    public float SetVolumeValue(float f)
-    {
-        return _volume = f;
-    }
-    public float SetSfxValue(float f)
-    {
-        return _sfx = f;
-    }
-
     public float SetMasterSoundValue(float f)
     {
         return _masterSound = f;
     }
 
+    public float SetVolumeValue(float f)
+    {
+        return _volume = f;
+    }
+
+    public float SetSfxValue(float f)
+    {
+        return _sfx = f;
+    }
+
+
     public float SetSoundMaster()
     {
-        _audioMix.SetFloat("MasterVol", _masterSound);
+        _audioMix.SetFloat("MasterVol", Mathf.Log10(_masterSound) * 20);
 
         return _masterSound;
     }
 
     public float SetSoundVolume()
     {
-        _audioMix.SetFloat("MusicVol", _volume);
+        _audioMix.SetFloat("MusicVol", Mathf.Log10(_volume) * 20);
 
         return _volume;
     }
 
     public float SetSfxVolume()
     {
-        _audioMix.SetFloat("SfxVol", _sfx);
+
+        _audioMix.SetFloat("SfxVol", Mathf.Log10(_sfx) * 20);
 
         return _sfx;
     }
@@ -274,6 +243,7 @@ public class NavigationData : MonoBehaviour
     {
         OnLoading += LoadData;
         OnSetBloom += SetBloom;
+        OnSetMasterVolume = SetSoundMaster;
         OnSetVolume += SetSoundVolume;
         OnSetSFX += SetSfxVolume;
         OnSetFilmGrain += SetFilmGrain;
@@ -284,6 +254,7 @@ public class NavigationData : MonoBehaviour
     {
         OnLoading -= LoadData;
         OnSetBloom -= SetBloom;
+        OnSetMasterVolume -= SetSoundMaster;
         OnSetVolume -= SetSoundVolume;
         OnSetSFX -= SetSfxVolume;
         OnSetFilmGrain -= SetFilmGrain;

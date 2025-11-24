@@ -72,7 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
             _moveY = 0;
         }
 
-        rb.velocity = new Vector2(_moveX * _runSpeed, this.gameObject.transform.position.y);
+        rb.linearVelocity = new Vector2(_moveX * _runSpeed, this.gameObject.transform.position.y);
     }
 
     #region - InputManager Buttons

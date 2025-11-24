@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ButtonActions : MonoBehaviour
 {
-    [SerializeField] Slider _sound, _sfx;
+    [SerializeField] Slider _masterSound, _musicSound, _sfx;
 
     [SerializeField] TMPro.TMP_Dropdown _resolution;
 
@@ -84,7 +84,7 @@ public class ButtonActions : MonoBehaviour
                 }
         }
 
-        s.PlayerSaveInt(SaveStrings.RESOLUTION.ToString(), res);
+        s.PlayerSaveInt(SaveStrings.MENU_RESOLUTION, res);
     }
 
     public void SetFullScreen(bool on)
@@ -95,14 +95,14 @@ public class ButtonActions : MonoBehaviour
 
         NavigationData.instance.FullScreen = on;
 
-        s.PlayerSaveBool(SaveStrings.FULLSCREEN.ToString(), on);
+        s.PlayerSaveBool(SaveStrings.MENU_FULLSCREEN, on);
     }
 
     public void SaveBloom(bool v)
     {
         SaveLoad s = new SaveLoad();
 
-        s.PlayerSaveBool(SaveStrings.BLOOM.ToString(), v);
+        s.PlayerSaveBool(SaveStrings.MENU_BLOOM, v);
 
         NavigationData.OnSetBloom?.Invoke(v);
     }
@@ -111,7 +111,7 @@ public class ButtonActions : MonoBehaviour
     {
         SaveLoad s = new SaveLoad();
 
-        s.PlayerSaveBool(SaveStrings.FILMGRAIN.ToString(), v);
+        s.PlayerSaveBool(SaveStrings.MENU_FILMGRAIN, v);
 
         NavigationData.OnSetFilmGrain?.Invoke(v);
     }
@@ -120,7 +120,7 @@ public class ButtonActions : MonoBehaviour
     {
         SaveLoad s = new SaveLoad();
 
-        s.PlayerSaveBool(SaveStrings.CHROMATIC_ABERRATION.ToString(), v);
+        s.PlayerSaveBool(SaveStrings.MENU_CHROMATIC_ABERRATION, v);
 
         NavigationData.OnSetChromAberration?.Invoke(v);
     }
@@ -128,17 +128,17 @@ public class ButtonActions : MonoBehaviour
     {
         SaveLoad s = new SaveLoad();
 
-        s.PlayerSaveFloat(SaveStrings.MASTERSOUND.ToString(), v);
+        s.PlayerSaveFloat(SaveStrings.MENU_MASTERSOUND, v);
 
-        NavigationData.instance.SetVolumeValue(v);
+        NavigationData.instance.SetMasterSoundValue(v);
 
-        NavigationData.OnSetVolume?.Invoke();
+        NavigationData.OnSetMasterVolume?.Invoke();
     }
     public void SaveMusicVolume(float v)
     {
         SaveLoad s = new SaveLoad();
 
-        s.PlayerSaveFloat(SaveStrings.VOLUME.ToString(), v);
+        s.PlayerSaveFloat(SaveStrings.MENU_VOLUME, v);
 
         NavigationData.instance.SetVolumeValue(v);
 
@@ -148,7 +148,7 @@ public class ButtonActions : MonoBehaviour
     {
         SaveLoad s = new SaveLoad();
 
-        s.PlayerSaveFloat(SaveStrings.SFX.ToString(), v);
+        s.PlayerSaveFloat(SaveStrings.MENU_SFX, v);
 
         NavigationData.instance.SetSfxValue(v);
 
@@ -162,53 +162,24 @@ public class ButtonActions : MonoBehaviour
 
     void UpdateUIOnLoad()
     {
-        _sound.value = PlayerPrefs.GetFloat(SaveStrings.VOLUME.ToString());
+        SaveLoad s = new SaveLoad();
 
-        _sfx.value = PlayerPrefs.GetFloat(SaveStrings.SFX.ToString());
+        _masterSound.value = s.PlayerLoadingFloat(SaveStrings.MENU_MASTERSOUND);
+        _musicSound.value = s.PlayerLoadingFloat(SaveStrings.MENU_VOLUME);
+        _sfx.value = s.PlayerLoadingFloat(SaveStrings.MENU_SFX);
 
         Toggle tChroma = GameObject.FindGameObjectWithTag("ChromaFX").GetComponent<Toggle>();
-
-        if (PlayerPrefs.GetString(SaveStrings.CHROMATIC_ABERRATION.ToString()) == "True")
-        {
-            tChroma.isOn = true;
-        }
-        else
-        {
-            tChroma.isOn = false;
-        }
+        tChroma.isOn = s.PlayerLoadingBool(SaveStrings.MENU_CHROMATIC_ABERRATION);
 
         Toggle tBlomm = GameObject.FindGameObjectWithTag("BloomFX").GetComponent<Toggle>();
-
-        if (PlayerPrefs.GetString(SaveStrings.BLOOM.ToString()) == "True")
-        {
-            tBlomm.isOn = true;
-        }
-        else
-        {
-            tBlomm.isOn = false;
-        }
+        tBlomm.isOn = s.PlayerLoadingBool(SaveStrings.MENU_BLOOM);
 
         Toggle tGrain = GameObject.FindGameObjectWithTag("FilmGrainFX").GetComponent<Toggle>();
+        tGrain.isOn = s.PlayerLoadingBool(SaveStrings.MENU_FILMGRAIN);
 
-        if (PlayerPrefs.GetString(SaveStrings.FILMGRAIN.ToString()) == "True")
-        {
-            tGrain.isOn = true;
-        }
-        else
-        {
-            tGrain.isOn = false;
-        }
+        _fullScreen.isOn = s.PlayerLoadingBool(SaveStrings.MENU_FULLSCREEN);
 
-        if (PlayerPrefs.GetString(SaveStrings.FULLSCREEN.ToString()) == "True")
-        {
-            _fullScreen.isOn = true;
-        }
-        else
-        {
-            _fullScreen.isOn = false;
-        }
-
-        _resolution.value = PlayerPrefs.GetInt(SaveStrings.RESOLUTION.ToString());
+        _resolution.value = s.PlayerLoadingInt(SaveStrings.MENU_RESOLUTION);
 
         switch (_resolution.value)
         {

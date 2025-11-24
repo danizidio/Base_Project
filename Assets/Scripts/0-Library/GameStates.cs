@@ -5,6 +5,8 @@ namespace StateMachine
         INITIALIZING,
         START,
         GAMEPLAY,
+        HISTORY,
+        MECHANIC_APRESENTATION,
         SHOWINFO,
         PAUSE,
         GAMEOVER

@@ -1,10 +1,10 @@
 using System.Collections;
 using StateMachine;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 [RequireComponent(typeof(CinemachineBrain))]
-[RequireComponent(typeof(CinemachineVirtualCamera))]
+[RequireComponent(typeof(CinemachineCamera))]
 public class CameraBehaviour : MonoBehaviour
 {
     public delegate void _onSearchingPlayer();
@@ -32,7 +32,7 @@ public class CameraBehaviour : MonoBehaviour
 
         if (_p != null)
         {
-            GetComponent<CinemachineVirtualCamera>().Follow = _p.transform;
+            GetComponent<CinemachineCamera>().Follow = _p.transform;
 
             GameManager.OnNextGameState?.Invoke(GamePlayStates.START);
 
@@ -46,11 +46,11 @@ public class CameraBehaviour : MonoBehaviour
 
     void ObjectToFocus(GameObject item)
     {
-        if (GetComponent<CinemachineVirtualCamera>().Follow != _p)
+        if (GetComponent<CinemachineCamera>().Follow != _p)
         {
             StopCoroutine("CorroutineObjectToFocus");
 
-            GetComponent<CinemachineVirtualCamera>().Follow = null;
+            GetComponent<CinemachineCamera>().Follow = null;
 
             StartCoroutine(CorroutineObjectToFocus(item));
         }
@@ -62,15 +62,15 @@ public class CameraBehaviour : MonoBehaviour
 
     IEnumerator CorroutineObjectToFocus(GameObject item)
     {
-        GetComponent<CinemachineVirtualCamera>().Follow = item.transform;
+        GetComponent<CinemachineCamera>().Follow = item.transform;
 
-        GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = _cameraSizeMinimum;
+        GetComponent<CinemachineCamera>().Lens.OrthographicSize = _cameraSizeMinimum;
 
         yield return new WaitForSeconds(_maxTimeOnFocus);
 
-        GetComponent<CinemachineVirtualCamera>().Follow = _p.transform;
+        GetComponent<CinemachineCamera>().Follow = _p.transform;
 
-        GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = _cameraSizeMaximum;
+        GetComponent<CinemachineCamera>().Lens.OrthographicSize = _cameraSizeMaximum;
     }
     private void OnEnable()
     {

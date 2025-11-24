@@ -1,59 +1,50 @@
 using UnityEngine;
+
 namespace SaveLoadPlayerPrefs
 {
     public class SaveLoad
     {
-        public void SavingCoins(int coinsToSave)
+        public bool PlayerLoadingBool(SaveStrings savestring)
         {
-            if (PlayerPrefs.HasKey("MONETARY_VALUE")) PlayerSaveInt("MONETARY_VALUE", coinsToSave);
+            return PlayerPrefs.GetString(savestring.ToString()) == "True";
         }
 
-        public int LoadingCoins()
+        public int PlayerLoadingInt(SaveStrings savestring)
         {
-            return PlayerPrefs.GetInt("MONETARY_VALUE");
+            return PlayerPrefs.GetInt(savestring.ToString());
         }
 
-        public void SpendingCoins(int spendCoins)
+        public float PlayerLoadingFloat(SaveStrings savestring)
         {
-            if (PlayerPrefs.HasKey("MONETARY_VALUE"))
-            {
-                int a = 0;
-                a = PlayerPrefs.GetInt("MONETARY_VALUE");
-
-                int total = a - spendCoins;
-
-               PlayerSaveInt("MONETARY_VALUE", total);
-            }
+            return PlayerPrefs.GetFloat(savestring.ToString());
         }
 
-        public void SaveScore(int scoreToSave)
+        public string PlayerLoadingString(SaveStrings savestring)
         {
-            PlayerSaveInt("HIGHSCORE", scoreToSave);
+            return PlayerPrefs.GetString(savestring.ToString());
         }
 
-        public int LoadingScore()
+        public void PlayerSaveInt(SaveStrings savestring, int value)
         {
-            return PlayerPrefs.GetInt("HIGHSCORE");
-        }
-
-        public bool LoadingBool(string str)
-        {
-            return PlayerPrefs.GetString(str) == "True" ;
-        }
-        public void PlayerSaveInt(string str, int value)
-        {
-            PlayerPrefs.SetInt(str, value);
+            PlayerPrefs.SetInt(savestring.ToString(), value);
             PlayerPrefs.Save();
         }
-        public void PlayerSaveFloat(string str, float value)
+
+        public void PlayerSaveFloat(SaveStrings savestring, float value)
         {
-                PlayerPrefs.SetFloat(str, value);
-                PlayerPrefs.Save();
+            PlayerPrefs.SetFloat(savestring.ToString(), value);
+            PlayerPrefs.Save();
         }
 
-        public void PlayerSaveBool(string str, bool value)
+        public void PlayerSaveBool(SaveStrings savestring, bool value)
         {
-            PlayerPrefs.SetString(str, value.ToString());
+            PlayerPrefs.SetString(savestring.ToString(), value.ToString());
+            PlayerPrefs.Save();
+        }
+
+        public void PlayerSaveString(SaveStrings savestring, string value)
+        {
+            PlayerPrefs.SetString(savestring.ToString(), value.ToString());
             PlayerPrefs.Save();
         }
     }
