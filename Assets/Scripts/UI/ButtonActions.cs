@@ -64,22 +64,22 @@ public class ButtonActions : MonoBehaviour
         {
             case 0:
                 {
-                    Screen.SetResolution(1280, 720, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(1280, 720, NavigationData.Instance.FullScreen);
                     break;
                 }
             case 1:
                 {
-                    Screen.SetResolution(1920, 1080, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(1920, 1080, NavigationData.Instance.FullScreen);
                     break;
                 }
             case 2:
                 {
-                    Screen.SetResolution(2560, 1440, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(2560, 1440, NavigationData.Instance.FullScreen);
                     break;
                 }
             case 3:
                 {
-                    Screen.SetResolution(3840, 2160, NavigationData.instance.FullScreen);
+                    Screen.SetResolution(3840, 2160, NavigationData.Instance.FullScreen);
                     break;
                 }
         }
@@ -93,7 +93,7 @@ public class ButtonActions : MonoBehaviour
 
         Screen.fullScreen = on;
 
-        NavigationData.instance.FullScreen = on;
+        NavigationData.Instance.FullScreen = on;
 
         s.PlayerSaveBool(SaveStrings.MENU_FULLSCREEN, on);
     }
@@ -130,7 +130,7 @@ public class ButtonActions : MonoBehaviour
 
         s.PlayerSaveFloat(SaveStrings.MENU_MASTERSOUND, v);
 
-        NavigationData.instance.SetMasterSoundValue(v);
+        NavigationData.Instance.SetMasterSoundValue(v);
 
         NavigationData.OnSetMasterVolume?.Invoke();
     }
@@ -140,7 +140,7 @@ public class ButtonActions : MonoBehaviour
 
         s.PlayerSaveFloat(SaveStrings.MENU_VOLUME, v);
 
-        NavigationData.instance.SetVolumeValue(v);
+        NavigationData.Instance.SetVolumeValue(v);
 
         NavigationData.OnSetVolume?.Invoke();
     }
@@ -150,7 +150,7 @@ public class ButtonActions : MonoBehaviour
 
         s.PlayerSaveFloat(SaveStrings.MENU_SFX, v);
 
-        NavigationData.instance.SetSfxValue(v);
+        NavigationData.Instance.SetSfxValue(v);
 
         NavigationData.OnSetSFX?.Invoke();
     }

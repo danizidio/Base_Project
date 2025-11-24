@@ -7,7 +7,7 @@ using UnityEngine.Audio;
 
 public class NavigationData : MonoBehaviour
 {
-    public static NavigationData instance;
+    public static NavigationData Instance;
 
     public delegate bool _onSetBloom(bool b);
     public static _onSetBloom OnSetBloom;
@@ -62,7 +62,7 @@ public class NavigationData : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
     private void Start()
     {

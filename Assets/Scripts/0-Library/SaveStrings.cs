@@ -15,6 +15,7 @@ namespace SaveLoadPlayerPrefs
         MENU_MASTERSOUND,
         MENU_VOLUME,
         MENU_SFX,
+        LOCALIZATION,
 
         #endregion
 
