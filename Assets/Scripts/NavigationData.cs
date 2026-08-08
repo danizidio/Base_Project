@@ -145,7 +145,7 @@ public class NavigationData : MonoBehaviour
         Volume vol = GameObject.FindGameObjectWithTag("Global Volume").GetComponent<Volume>();
 
         Bloom bloomVolume;
-
+        
         if(vol.profile.TryGet<Bloom>(out bloomVolume))
         {
             if(b)
